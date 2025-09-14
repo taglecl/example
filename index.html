@@ -52,17 +52,15 @@
             <div id="feedbackMessage" class="mt-4 text-center text-sm font-medium opacity-0"></div>
         </div>
 
-        <!-- Post de Threads embebido -->
-        <div>
-            <blockquote class="threads-embed" data-thread-id="DOjLYfEjGDV">
-                <section>
-                    <a href="https://www.threads.com/@eugekellertech/post/DOjLYfEjGDV" target="_blank" rel="noopener noreferrer">
-                        Post by @eugekellertech
-                    </a>
-                </section>
-            </blockquote>
-            <!-- Script de Threads para que funcione el embebido -->
-            <script async src="https://www.threads.net/embed.js"></script>
+        <!-- Post de Threads embebido con iFrame -->
+        <div class="w-full flex flex-col items-center space-y-4 pt-4">
+             <h2 class="text-xl font-semibold text-gray-800">El post que lo inició todo</h2>
+             <iframe 
+                src="https://www.threads.net/post/DOjLYfEjGDV/embed" 
+                class="rounded-xl border border-gray-200"
+                style="width: 100%; max-width: 500px; height: 600px;"
+                loading="lazy">
+             </iframe>
         </div>
 
     </main>
@@ -150,3 +148,4 @@
 
 </body>
 </html>
+
