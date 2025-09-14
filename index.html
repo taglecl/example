@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Sé el primero en saberlo!</title>
+    <!-- Incluimos Tailwind CSS para un diseño limpio y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para el estado de carga del botón */
+        .sending {
+            cursor: not-allowed;
+            background-color: #9CA3AF; /* Gris de Tailwind */
+        }
+        /* Estilo para el mensaje de feedback */
+        #feedbackMessage {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-10 space-y-8">
+        
+        <!-- Título principal -->
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                Deja tus datos y sé el primero en recibir noticias de cuándo esté lista la app.
+            </h1>
+        </div>
+
+        <!-- Formulario de registro -->
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <form id="contactForm" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <button type="submit" id="submitButton" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Enviar
+                </button>
+            </form>
+            <!-- Mensaje de confirmación o error -->
+            <div id="feedbackMessage" class="mt-4 text-center text-sm font-medium opacity-0"></div>
+        </div>
+
+        <!-- Post de Threads embebido -->
+        <div>
+            <blockquote class="threads-embed" data-thread-id="DOjLYfEjGDV">
+                <section>
+                    <a href="https://www.threads.com/@eugekellertech/post/DOjLYfEjGDV" target="_blank" rel="noopener noreferrer">
+                        Post by @eugekellertech
+                    </a>
+                </section>
+            </blockquote>
+            <!-- Script de Threads para que funcione el embebido -->
+            <script async src="https://www.threads.net/embed.js"></script>
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="text-center mt-8 text-gray-500 text-sm">
+        <p>&copy; 2024 @eugekellertech. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // --- INICIO DE LA LÓGICA DEL FORMULARIO ---
+
+        const form = document.getElementById('contactForm');
+        const submitButton = document.getElementById('submitButton');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
+        // ===================================================================================
+        // ¡ATENCIÓN IMPLEMENTADOR! 
+        // Pega aquí la URL que generaste en Google Apps Script.
+        // El formulario enviará los datos a esta URL.
+        // Sigue las instrucciones del archivo 'instrucciones.md' para obtenerla.
+        // ===================================================================================
+        const SCRIPT_URL = 'URL_DE_TU_GOOGLE_APPS_SCRIPT_AQUI'; 
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitamos que la página se recargue
+
+            // Validamos que la URL haya sido reemplazada
+            if (SCRIPT_URL === 'URL_DE_TU_GOOGLE_APPS_SCRIPT_AQUI' || SCRIPT_URL === '') {
+                console.error('Error: La URL de Google Apps Script no ha sido configurada.');
+                showFeedback('Error de configuración. Contacta al administrador.', false);
+                return;
+            }
+
+            // Mostramos un estado de carga en el botón
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+            submitButton.classList.add('sending');
+
+            // Creamos un objeto con los datos del formulario
+            const formData = new FormData(form);
+
+            // Usamos fetch para enviar los datos a Google Apps Script
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    showFeedback('¡Gracias! Tus datos han sido enviados.', true);
+                    form.reset(); // Limpiamos el formulario
+                } else {
+                    // Si Google Apps Script devuelve un error, lo mostramos
+                    throw new Error(data.error || 'Ocurrió un error desconocido.');
+                }
+            })
+            .catch(error => {
+                // Si hay un error de red o en la promesa
+                console.error('Error al enviar el formulario:', error);
+                showFeedback('Hubo un problema al enviar tus datos. Inténtalo de nuevo.', false);
+            })
+            .finally(() => {
+                // Restablecemos el botón a su estado original
+                submitButton.disabled = false;
+                submitButton.textContent = 'Enviar';
+                submitButton.classList.remove('sending');
+            });
+        });
+
+        // Función para mostrar mensajes al usuario
+        function showFeedback(message, isSuccess) {
+            feedbackMessage.textContent = message;
+            feedbackMessage.className = `mt-4 text-center text-sm font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`;
+            feedbackMessage.style.opacity = '1';
+
+            // Ocultamos el mensaje después de 5 segundos
+            setTimeout(() => {
+                feedbackMessage.style.opacity = '0';
+            }, 5000);
+        }
+
+        // --- FIN DE LA LÓGICA DEL FORMULARIO ---
+    </script>
+
+</body>
+</html>
