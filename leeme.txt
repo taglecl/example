@@ -1,19 +1,42 @@
 Guía: Conectar Formulario a Google Sheets
+
+
 Este proyecto contiene una página de aterrizaje simple (index.html) cuyo formulario se conecta a una Hoja de Cálculo de Google para almacenar los datos de los usuarios.
+
 Para que funcione, es necesario configurar un intermediario con Google Apps Script.
+
 Pasos de Configuración
 Sigue estas instrucciones para habilitar el guardado de datos.
+
+
+********
 Paso 1: Crear la Hoja de Cálculo
+
 Crea una nueva hoja de cálculo en Google Sheets.
+
 Dale un nombre (ej. "Registros App").
+
 Configura los encabezados en la primera fila. Es crucial que los nombres coincidan con los del formulario:
-Celda A1: timestamp
+
+Celda A1: timestamp 
 Celda B1: name
 Celda C1: email
+
+Timestamp: en esa casilla se registra la hora de cuando se dejaron los datos
+name: el nombre
+email: la casilla de correo jeje
+
+********
+
 Paso 2: Crear el Google Apps Script
 En tu hoja de cálculo, ve al menú Extensiones > Apps Script.
-Borra el código de ejemplo y pega lo siguiente:
-// Este script se ejecuta en los servidores de Google para procesar los datos del formulario.
+
+
+Borra el código de ejemplo y pega lo siguiente. copia desde function hasta }
+
+
+
+
 
 function doPost(e) {
   try {
@@ -42,30 +65,82 @@ function doPost(e) {
 }
 
 
+
+
+
+
+*****
+
 Guarda el proyecto (💾) con un nombre como "API Formulario".
+
+
+*******
+
 Paso 3: Implementar el Script como Aplicación Web
+
 Haz clic en el botón azul "Implementar" y selecciona "Nueva implementación".
+
 Haz clic en el ícono del engranaje (⚙️) y elige "Aplicación web".
+
 Configura las siguientes opciones:
+
 Descripción: API para recibir datos del formulario de la landing page.
+
 Ejecutar como: Yo.
+
 ¿Quién tiene acceso?: Cualquier persona (¡Importante!).
+
 Haz clic en "Implementar".
+
+
+
+
+
+*******
+
 Paso 4: Autorizar Permisos
+
 Google te pedirá autorización. Haz clic en "Autorizar acceso".
+
 Selecciona tu cuenta de Google.
+
 Si aparece una advertencia de "Google no ha verificado esta aplicación", haz clic en "Configuración avanzada" y luego en "Ir a [nombre de tu proyecto] (no seguro)".
+
 Revisa y "Permitir" los permisos.
+
+
+
+
+
+
+
+******
+
 Paso 5: Conectar la URL con el HTML
+
 Después de autorizar, copia la URL de la aplicación web que te proporciona Google.
+
 Abre el archivo index.html.
+
 Busca la siguiente línea en la sección <script>:
+
 const SCRIPT_URL = 'URL_DE_TU_GOOGLE_APPS_SCRIPT_AQUI';
 
 
 Reemplaza URL_DE_TU_GOOGLE_APPS_SCRIPT_AQUI con la URL que copiaste. Debería verse así:
+
 const SCRIPT_URL = '[https://script.google.com/macros/s/AKfycb.../exec](https://script.google.com/macros/s/AKfycb.../exec)';
 
 
 Guarda el archivo index.html.
+
+
+
+
+
 ¡Listo! Tu formulario ya está conectado y guardará los datos automáticamente en tu Hoja de Cálculo de Google.
+
+
+éxito en esta nueva etapa y que tu app sea todo un éxito.
+
+
